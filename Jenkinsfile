@@ -32,14 +32,18 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
-                echo "Deploying the application..."
-                sh '''
-                scp -o StrictHostKeyChecking=no -i $SSH_KEY_PATH target/*.jar ec2-user@$EC2_IP:/home/ec2-user/
-                ssh -i $SSH_KEY_PATH ec2-user@$EC2_IP "nohup java -jar /home/ec2-user/*.jar > app.log 2>&1 &"
-                '''
-            }
-        }
+    		steps {
+        		echo "Deploying the application..."
+        		echo "SSH Key Path: $SSH_KEY_PATH"
+        		echo "EC2 IP: $EC2_IP"
+        		sh '''
+        		ls -l $SSH_KEY_PATH  # Ensure the file exists and has the correct permissions
+        		scp -o StrictHostKeyChecking=no -i $SSH_KEY_PATH target/*.jar ec2-user@$EC2_IP:/home/ec2-user/
+        		ssh -i $SSH_KEY_PATH ec2-user@$EC2_IP "nohup java -jar /home/ec2-user/*.jar > app.log 2>&1 &"
+        		'''
+   		 }
+	}
+		
     }
 
     post {
