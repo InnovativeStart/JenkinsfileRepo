@@ -1,12 +1,8 @@
 pipeline {
     agent any
 
-    environment {
-        REPO_URL = 'https://github.com/InnovativeStart/Finlit.git'
-        EC2_IP = '52.9.242.34'  // Replace with the actual EC2 IP address
-        SSH_KEY_PATH = '/home/ec2-user/.ssh/jenkins.pem'  // Set the correct path to your private SSH key
-        MAVEN_HOME = '/usr/share/maven' // Path to Maven (update if necessary)
-        PATH = "$MAVEN_HOME/bin:$PATH"  // Add Maven to the PATH
+    tools {
+        maven 'Maven 3.8.6' // Use the configured Maven tool name
     }
 
     stages {
@@ -15,10 +11,10 @@ pipeline {
                 echo "Cloning application repository..."
                 checkout([
                     $class: 'GitSCM',
-                    branches: [[name: '*/learningmodules']], // Replace 'learningmodules' with your branch
+                    branches: [[name: '*/learningmodules']],
                     userRemoteConfigs: [[
-                        url: REPO_URL,
-                        credentialsId: '64861eaa-5ef7-4f28-b73b-cf0328176c87' // Use Jenkins credentials
+                        url: 'https://github.com/InnovativeStart/Finlit.git',
+                        credentialsId: '64861eaa-5ef7-4f28-b73b-cf0328176c87'
                     ]]
                 ])
             }
@@ -27,7 +23,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building the application..."
-                sh 'mvn clean package' // Ensure 'mvn' is in PATH
+                sh 'mvn clean package'  // This should now work after configuring Maven
             }
         }
 
