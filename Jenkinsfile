@@ -4,7 +4,8 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/InnovativeStart/Finlit.git'
         EC2_IP = '52.9.242.34'  // Replace with the actual EC2 IP address
-        SSH_KEY_PATH = '/home/ec2-user/.ssh/jenkins.pem'  // Set the correct path to your private SSH key
+        SSH_KEY_PATH = '/var/lib/jenkins/.ssh/jenkins.pem'  // Updated path
+
         MAVEN_HOME = '/opt/maven' // Path to Maven (update if necessary)
         PATH = "$MAVEN_HOME/bin:$PATH"  // Add Maven to the PATH
     }
