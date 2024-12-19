@@ -18,7 +18,7 @@ pipeline {
                     branches: [[name: '*/learningmodules']], // Replace 'learningmodules' with your branch
                     userRemoteConfigs: [[
                         url: REPO_URL,
-                        credentialsId: '64861eaa-5ef7-4f28-b73b-cf0328176c87' // Use Jenkins credentials
+                        credentialsId: '51261412-9bf0-42cb-ba4c-256b77d10011' // Use Jenkins credentials
                     ]]
                 ])
             }
