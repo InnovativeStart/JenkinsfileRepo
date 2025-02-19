@@ -18,7 +18,8 @@ pipeline {
                         $class: 'GitSCM',
                         branches: [[name: 'learningmodules']],  // Ensure correct branch name
                         userRemoteConfigs: [[
-                            url: "https://$GITHUB_TOKEN@github.com/InnovativeStart/Finlit.git"
+                            url: "https://github.com/InnovativeStart/Finlit.git",
+                            credentialsId: '16c4f6e5-c92a-4484-a4d5-9d65617fd3d0' 
                         ]]
                     ])
                 }
