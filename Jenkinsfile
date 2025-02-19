@@ -35,30 +35,27 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
-                echo "Deploying the application..."
-                echo "SSH Key Path: $SSH_KEY_PATH"
-                echo "EC2 IP: $EC2_IP"
-                sh '''
-                if [ ! -f $SSH_KEY_PATH ]; then 
-                    echo "ERROR: SSH Key not found at $SSH_KEY_PATH"; 
-                    exit 1; 
-                fi
-                
-                chmod 600 $SSH_KEY_PATH  # Correct SSH Key Permissions
-                ls -l $SSH_KEY_PATH  # Verify key exists
-
-                echo "Transferring JAR to EC2..."
-                scp -o StrictHostKeyChecking=no -i $SSH_KEY_PATH target/*.jar ec2-user@$EC2_IP:/home/ec2-user/
-
-                echo "Restarting Application..."
-                ssh -o StrictHostKeyChecking=no -i $SSH_KEY_PATH ec2-user@$EC2_IP << EOF
-                pkill -f "java -jar" || echo "No running process found"
-                nohup java -jar /home/ec2-user/*.jar > /home/ec2-user/app.log 2>&1 &
-                EOF
-                '''
-            }
-        }
+    steps {
+        echo "Deploying the application..."
+        echo "SSH Key Path: $SSH_KEY_PATH"
+        echo "EC2 IP: $EC2_IP"
+        sh '''
+        if [ ! -f $SSH_KEY_PATH ]; then echo "SSH Key not found"; exit 1; fi
+        chmod 600 $SSH_KEY_PATH  # Ensure correct permissions
+        ls -l $SSH_KEY_PATH  # Verify key exists
+        
+        echo "Transferring JAR to EC2..."
+        scp -o StrictHostKeyChecking=no -i $SSH_KEY_PATH target/*.jar ec2-user@$EC2_IP:/home/ec2-user/
+        
+        echo "Restarting Application..."
+        ssh -o StrictHostKeyChecking=no -i $SSH_KEY_PATH ec2-user@$EC2_IP << 'EOF'
+        pkill -f "java -jar" || echo "No running process found"
+        nohup java -jar /home/ec2-user/*.jar > /home/ec2-user/app.log 2>&1 &
+        exit
+        EOF
+        '''
+    }
+}
     }
 
     post {
